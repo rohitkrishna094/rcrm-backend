@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -90,6 +91,23 @@ public class CandidateController {
             return d.toString();
         }
         return "";
+    }
+
+    // Delete this document if exists for this candidate id
+    @DeleteMapping("/{id}/documents/delete/{docId}")
+    public void deleteDocument(@PathVariable String id, @PathVariable ObjectId docId) {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<Document> docs = c.getDocuments();
+            for (int i = 0; i < docs.size(); i++) {
+                if (docs.get(i).get_id().equals(docId)) {
+                    docs.remove(i);
+                }
+            }
+            c.setDocuments(docs);
+            this.candidateRepository.save(c);
+        }
     }
 
 }

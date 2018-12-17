@@ -1,22 +1,28 @@
 package com.rsrit.rcrm.model;
 
 import org.bson.types.Binary;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Document {
 
+    @Id
+    private ObjectId _id;
     private String title;
     private String type;
     private Binary fileAttachment;
     private String comments;
 
     public Document() {
+        this._id = ObjectId.get();
     }
 
-    public Document(String title, String type, Binary fileAttachment, String comments) {
+    public Document(ObjectId _id, String title, String type, Binary fileAttachment, String comments) {
         super();
+        this._id = _id;
         this.title = title;
         this.type = type;
         this.fileAttachment = fileAttachment;
@@ -27,6 +33,14 @@ public class Document {
     public String toString() {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         return gson.toJson(this);
+    }
+
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
     }
 
     public String getTitle() {
