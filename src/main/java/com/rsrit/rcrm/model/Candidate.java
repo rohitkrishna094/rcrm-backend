@@ -117,25 +117,13 @@ public class Candidate {
         this.disability = disability;
     }
 
-    @Override
-    public String toString() {
-        return "Candidate [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", middleName=" + middleName + ", nickName=" + nickName + ", emailAddress=" + emailAddress
-                + ", mobileNumber=" + mobileNumber + ", workPhoneNumber=" + workPhoneNumber + ", otherPhoneNumber=" + otherPhoneNumber + ", dateOfBirth=" + dateOfBirth + ", ssn=" + ssn + ", skypeId="
-                + skypeId + ", linkedinProfileUrl=" + linkedinProfileUrl + ", facebookProfileUrl=" + facebookProfileUrl + ", twitterProfileUrl=" + twitterProfileUrl + ", videoReference="
-                + videoReference + ", workAuthorization=" + workAuthorization + ", clearance=" + clearance + ", address=" + address + ", city=" + city + ", state=" + state + ", country=" + country
-                + ", postalCode=" + postalCode + ", source=" + source + ", experience=" + experience + ", referredBy=" + referredBy + ", applicantStatus=" + applicantStatus + ", applicantGroup="
-                + applicantGroup + ", ownership=" + ownership + ", jobTitle=" + jobTitle + ", expectedPay=" + expectedPay + ", additionalComments=" + additionalComments + ", relocation=" + relocation
-                + ", skills=" + skills + ", primarySkills=" + primarySkills + ", technology=" + technology + ", taxTerms=" + taxTerms + ", gender=" + gender + ", raceEthnicity=" + raceEthnicity
-                + ", veteranStatus=" + veteranStatus + ", disability=" + disability + "]";
+    public String getId() {
+        return id;
     }
 
-    // public UUID getId() {
-    // return id;
-    // }
-    //
-    // public void setId(UUID id) {
-    // this.id = id;
-    // }
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;

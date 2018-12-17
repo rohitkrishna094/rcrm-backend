@@ -27,10 +27,10 @@ public class RcrmApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        candidateRepository.deleteAll();
-
-        // save n random entities
-        this.save(20);
+        // candidateRepository.deleteAll();
+        //
+        // // save n random entities
+        // this.save(5);
     }
 
     // Test utility function to save n candidate entities
