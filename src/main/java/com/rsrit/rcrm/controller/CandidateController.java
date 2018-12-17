@@ -1,6 +1,7 @@
 package com.rsrit.rcrm.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,11 @@ public class CandidateController {
     public String create(@RequestBody Candidate c) {
         Candidate saved = this.candidateRepository.save(c);
         return saved.toString();
+    }
+
+    @GetMapping("/all")
+    public String getAllCandidates() {
+        return this.candidateRepository.findAll().toString();
     }
 
 }

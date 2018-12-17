@@ -6,6 +6,9 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 @Document(collection = "candidates")
 public class Candidate {
 
@@ -58,6 +61,12 @@ public class Candidate {
     private String raceEthnicity;
     private String veteranStatus;
     private String disability;
+
+    @Override
+    public String toString() {
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        return gson.toJson(this);
+    }
 
     public Candidate(String firstName, String lastName, String emailAddress) {
         this.firstName = firstName;
