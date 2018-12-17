@@ -2,7 +2,6 @@ package com.rsrit.rcrm.model;
 
 import java.util.List;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -61,6 +60,7 @@ public class Candidate {
     private String raceEthnicity;
     private String veteranStatus;
     private String disability;
+    private List<com.rsrit.rcrm.model.Document> documents;
 
     @Override
     public String toString() {
@@ -78,12 +78,13 @@ public class Candidate {
 
     }
 
-    public Candidate(ObjectId id, String firstName, String lastName, String middleName, String nickName, String emailAddress, String mobileNumber, String workPhoneNumber, String otherPhoneNumber,
+    public Candidate(String id, String firstName, String lastName, String middleName, String nickName, String emailAddress, String mobileNumber, String workPhoneNumber, String otherPhoneNumber,
             CustomDate dateOfBirth, String ssn, String skypeId, String linkedinProfileUrl, String facebookProfileUrl, String twitterProfileUrl, String videoReference, String workAuthorization,
             Boolean clearance, String address, String city, String state, String country, String postalCode, String source, Integer experience, String referredBy, String applicantStatus,
             String applicantGroup, String ownership, String jobTitle, Double expectedPay, String additionalComments, Boolean relocation, List<String> skills, List<String> primarySkills,
-            String technology, String taxTerms, String gender, String raceEthnicity, String veteranStatus, String disability) {
+            String technology, String taxTerms, String gender, String raceEthnicity, String veteranStatus, String disability, List<com.rsrit.rcrm.model.Document> documents) {
         super();
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
@@ -124,6 +125,15 @@ public class Candidate {
         this.raceEthnicity = raceEthnicity;
         this.veteranStatus = veteranStatus;
         this.disability = disability;
+        this.documents = documents;
+    }
+
+    public List<com.rsrit.rcrm.model.Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<com.rsrit.rcrm.model.Document> documents) {
+        this.documents = documents;
     }
 
     public String getId() {
