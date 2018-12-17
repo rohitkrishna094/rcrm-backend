@@ -29,14 +29,11 @@ public class RcrmApplication implements CommandLineRunner {
     public void run(String... args) {
         candidateRepository.deleteAll();
 
-        // save two random entities
+        // save n random entities
         this.save(20);
-
-        for (Candidate c : candidateRepository.findAll()) {
-            System.out.println(c.getFirstName() + " " + c.getLastName());
-        }
     }
 
+    // Test utility function to save n candidate entities
     public void save(int n) {
         Faker faker = new Faker();
         for (int i = 0; i < n; i++) {

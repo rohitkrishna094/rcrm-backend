@@ -1,8 +1,8 @@
 package com.rsrit.rcrm.model;
 
 import java.util.List;
-import java.util.UUID;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,8 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Candidate {
 
     @Id
-    UUID id = UUID.randomUUID();
-
+    private String id;
     private String firstName;
     private String lastName;
     private String middleName;
@@ -70,7 +69,7 @@ public class Candidate {
 
     }
 
-    public Candidate(String firstName, String lastName, String middleName, String nickName, String emailAddress, String mobileNumber, String workPhoneNumber, String otherPhoneNumber,
+    public Candidate(ObjectId id, String firstName, String lastName, String middleName, String nickName, String emailAddress, String mobileNumber, String workPhoneNumber, String otherPhoneNumber,
             CustomDate dateOfBirth, String ssn, String skypeId, String linkedinProfileUrl, String facebookProfileUrl, String twitterProfileUrl, String videoReference, String workAuthorization,
             Boolean clearance, String address, String city, String state, String country, String postalCode, String source, Integer experience, String referredBy, String applicantStatus,
             String applicantGroup, String ownership, String jobTitle, Double expectedPay, String additionalComments, Boolean relocation, List<String> skills, List<String> primarySkills,
@@ -130,13 +129,13 @@ public class Candidate {
                 + ", veteranStatus=" + veteranStatus + ", disability=" + disability + "]";
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    // public UUID getId() {
+    // return id;
+    // }
+    //
+    // public void setId(UUID id) {
+    // this.id = id;
+    // }
 
     public String getFirstName() {
         return firstName;
