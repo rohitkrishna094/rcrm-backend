@@ -110,4 +110,19 @@ public class CandidateController {
         }
     }
 
+    // Get all documents for this candidate with id id
+    // May change the return type
+    @GetMapping("/{id}/documents")
+    public String getAllDocuments(@PathVariable String id) {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<Document> docs = c.getDocuments();
+            if (docs == null)
+                docs = new ArrayList<>();
+            return docs.toString();
+        }
+        return "";
+    }
+
 }
