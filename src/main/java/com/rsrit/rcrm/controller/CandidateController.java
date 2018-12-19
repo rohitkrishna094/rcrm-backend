@@ -162,4 +162,53 @@ public class CandidateController {
         }
         return "";
     }
+
+    // Get a list of educations for this candidate with id id
+    @GetMapping("/{id}/education")
+    public String getEducationList(@PathVariable String id) {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<Education> edus = c.getEducations();
+            if (edus == null)
+                edus = new ArrayList<>();
+            return edus.toString();
+        }
+        return "";
+    }
+
+    // Update education details for this candidate
+    @PostMapping("{id}/education/update/{eduId}")
+    public String updateEducation(@PathVariable String id, @RequestBody Education edu, @PathVariable ObjectId eduId) throws IllegalAccessException, InvocationTargetException {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<Education> edus = c.getEducations();
+            if (edus == null) {
+                return "";
+            } else {
+                for (int i = 0; i < edus.size(); i++) {
+                    Education e = edus.get(i);
+                    if (e.get_id().equals(eduId)) {
+                        // this edu is the one to update
+                        BeanUtilsBean notNull = new NullAwareBeanUtilsBean();
+                        ObjectId oldId = e.get_id();
+                        notNull.copyProperties(e, edu);
+                        e.set_id(oldId);
+                        break;
+                    }
+                }
+            } // end else
+            c.setEducations(edus);
+            Candidate saved = this.candidateRepository.save(c);
+            List<Education> results = saved.getEducations();
+            for (int i = 0; i < results.size(); i++) {
+                if (results.get(i).get_id().equals(eduId)) {
+                    return results.get(i).toString();
+                }
+            }
+        }
+        return "";
+    }
+
 }
