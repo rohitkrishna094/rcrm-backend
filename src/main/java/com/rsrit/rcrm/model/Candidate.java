@@ -61,6 +61,7 @@ public class Candidate {
     private String veteranStatus;
     private String disability;
     private List<com.rsrit.rcrm.model.Document> documents;
+    private List<Education> educations;
 
     @Override
     public String toString() {
@@ -78,54 +79,12 @@ public class Candidate {
 
     }
 
-    public Candidate(String id, String firstName, String lastName, String middleName, String nickName, String emailAddress, String mobileNumber, String workPhoneNumber, String otherPhoneNumber,
-            CustomDate dateOfBirth, String ssn, String skypeId, String linkedinProfileUrl, String facebookProfileUrl, String twitterProfileUrl, String videoReference, String workAuthorization,
-            Boolean clearance, String address, String city, String state, String country, String postalCode, String source, Integer experience, String referredBy, String applicantStatus,
-            String applicantGroup, String ownership, String jobTitle, Double expectedPay, String additionalComments, Boolean relocation, List<String> skills, List<String> primarySkills,
-            String technology, String taxTerms, String gender, String raceEthnicity, String veteranStatus, String disability, List<com.rsrit.rcrm.model.Document> documents) {
-        super();
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.middleName = middleName;
-        this.nickName = nickName;
-        this.emailAddress = emailAddress;
-        this.mobileNumber = mobileNumber;
-        this.workPhoneNumber = workPhoneNumber;
-        this.otherPhoneNumber = otherPhoneNumber;
-        this.dateOfBirth = dateOfBirth;
-        this.ssn = ssn;
-        this.skypeId = skypeId;
-        this.linkedinProfileUrl = linkedinProfileUrl;
-        this.facebookProfileUrl = facebookProfileUrl;
-        this.twitterProfileUrl = twitterProfileUrl;
-        this.videoReference = videoReference;
-        this.workAuthorization = workAuthorization;
-        this.clearance = clearance;
-        this.address = address;
-        this.city = city;
-        this.state = state;
-        this.country = country;
-        this.postalCode = postalCode;
-        this.source = source;
-        this.experience = experience;
-        this.referredBy = referredBy;
-        this.applicantStatus = applicantStatus;
-        this.applicantGroup = applicantGroup;
-        this.ownership = ownership;
-        this.jobTitle = jobTitle;
-        this.expectedPay = expectedPay;
-        this.additionalComments = additionalComments;
-        this.relocation = relocation;
-        this.skills = skills;
-        this.primarySkills = primarySkills;
-        this.technology = technology;
-        this.taxTerms = taxTerms;
-        this.gender = gender;
-        this.raceEthnicity = raceEthnicity;
-        this.veteranStatus = veteranStatus;
-        this.disability = disability;
-        this.documents = documents;
+    public List<Education> getEducations() {
+        return educations;
+    }
+
+    public void setEducations(List<Education> educations) {
+        this.educations = educations;
     }
 
     public List<com.rsrit.rcrm.model.Document> getDocuments() {

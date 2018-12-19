@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.rsrit.rcrm.model.Candidate;
 import com.rsrit.rcrm.model.Document;
+import com.rsrit.rcrm.model.Education;
 import com.rsrit.rcrm.repository.CandidateRepository;
 import com.rsrit.rcrm.util.NullAwareBeanUtilsBean;
 
@@ -71,7 +72,7 @@ public class CandidateController {
             this.candidateRepository.delete(c.get());
     }
 
-    // Documents endpoints for candidates
+    /*-------------------------------Document endpoints for candidate-------------------------------*/
     // Create this document for this candidate with id "id"
     @PostMapping("/{id}/documents/save")
     public String documentCreate(@RequestParam("file") MultipartFile multipart, @PathVariable String id) throws IOException {
@@ -143,4 +144,22 @@ public class CandidateController {
         return "not found"; // handle exceptions etc
     }
 
+    /*-------------------------------Education endpoints for candidate-------------------------------*/
+    // Create endpoint for education based on candidate's id
+    @PostMapping("{id}/education/add")
+    public String educationCreate(@RequestBody Education edu, @PathVariable String id) {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<Education> edus = c.getEducations();
+            if (edus == null)
+                edus = new ArrayList<>();
+            edus.add(edu);
+            c.setEducations(edus);
+            this.candidateRepository.save(c);
+            List<Education> results = this.candidateRepository.findById(id).get().getEducations();
+            return results.get(results.size() - 1).toString();
+        }
+        return "";
+    }
 }
