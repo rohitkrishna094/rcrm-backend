@@ -62,10 +62,11 @@ public class Candidate {
     private String disability;
     private List<com.rsrit.rcrm.model.Document> documents;
     private List<Education> educations;
+    private List<WorkExperience> workExperienceList;
 
     @Override
     public String toString() {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd").create();
         return gson.toJson(this);
     }
 
@@ -77,6 +78,14 @@ public class Candidate {
 
     public Candidate() {
 
+    }
+
+    public List<WorkExperience> getWorkExperienceList() {
+        return workExperienceList;
+    }
+
+    public void setWorkExperienceList(List<WorkExperience> workExperienceList) {
+        this.workExperienceList = workExperienceList;
     }
 
     public List<Education> getEducations() {

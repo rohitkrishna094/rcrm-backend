@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.rsrit.rcrm.model.Candidate;
 import com.rsrit.rcrm.model.Document;
 import com.rsrit.rcrm.model.Education;
+import com.rsrit.rcrm.model.WorkExperience;
 import com.rsrit.rcrm.repository.CandidateRepository;
 import com.rsrit.rcrm.util.NullAwareBeanUtilsBean;
 
@@ -157,8 +158,7 @@ public class CandidateController {
                 edus = new ArrayList<>();
             edus.add(edu);
             c.setEducations(edus);
-            this.candidateRepository.save(c);
-            List<Education> results = this.candidateRepository.findById(id).get().getEducations();
+            List<Education> results = this.candidateRepository.save(c).getEducations();
             return results.get(results.size() - 1).toString();
         }
         return "";
@@ -212,7 +212,7 @@ public class CandidateController {
         return "";
     }
 
-    // Delete education for this candidate
+    // Delete education for this candidate id
     @DeleteMapping("{id}/education/delete/{eduId}")
     public void deleteEducation(@PathVariable String id, @PathVariable ObjectId eduId) {
         Optional<Candidate> found = this.candidateRepository.findById(id);
@@ -231,6 +231,38 @@ public class CandidateController {
                 this.candidateRepository.save(c);
             }
         }
+    }
 
+    /*-------------------------------WorkExperience endpoints for candidate-------------------------------*/
+    // Create workexp for this candidate id
+    @PostMapping("{id}/experience/add")
+    public String workExpCreate(@RequestBody WorkExperience we, @PathVariable String id) {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<WorkExperience> wes = c.getWorkExperienceList();
+            if (wes == null)
+                wes = new ArrayList<>();
+            wes.add(we);
+            c.setWorkExperienceList(wes);
+            List<WorkExperience> results = this.candidateRepository.save(c).getWorkExperienceList();
+            return results.get(results.size() - 1).toString();
+        }
+        return "";
+    }
+
+    // Get a list of work experiences for this candidate id
+    public String getWorkExpList() {
+        return "";
+    }
+
+    // Update workExp details for this candidate id
+    public String updateWorkExp() {
+        return "";
+    }
+
+    // Delete workExp details for this candidate id
+    public void deleteWorkExp() {
+        return;
     }
 }

@@ -21,7 +21,7 @@ public class Education {
 
     @Override
     public String toString() {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd").create();
         return gson.toJson(this);
     }
 
