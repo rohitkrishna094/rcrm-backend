@@ -10,17 +10,17 @@ import com.google.gson.GsonBuilder;
 public class Document {
 
     @Id
-    private ObjectId _id;
+    private String _id;
     private String title;
     private String type;
     private Binary fileAttachment;
     private String comments;
 
     public Document() {
-        this._id = ObjectId.get();
+        this._id = ObjectId.get().toString();
     }
 
-    public Document(ObjectId _id, String title, String type, Binary fileAttachment, String comments) {
+    public Document(String _id, String title, String type, Binary fileAttachment, String comments) {
         super();
         this._id = _id;
         this.title = title;
@@ -35,11 +35,11 @@ public class Document {
         return gson.toJson(this);
     }
 
-    public ObjectId get_id() {
+    public String get_id() {
         return _id;
     }
 
-    public void set_id(ObjectId _id) {
+    public void set_id(String _id) {
         this._id = _id;
     }
 

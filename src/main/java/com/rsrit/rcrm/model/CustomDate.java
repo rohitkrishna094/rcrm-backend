@@ -33,6 +33,10 @@ public class CustomDate {
         this.ticks = DateHelper.getUTCTicks(this.date);
     }
 
+    public CustomDate() {
+
+    }
+
     // public CustomDate() {
     // // this.date = new Date();
     // // this.ticks = DateHelper.getUTCTicks(date);

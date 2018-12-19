@@ -9,7 +9,7 @@ import com.google.gson.GsonBuilder;
 public class WorkExperience {
 
     @Id
-    private ObjectId _id;
+    private String _id;
     private String employer;
     private String jobTitle;
     private CustomDate startDate;
@@ -22,10 +22,10 @@ public class WorkExperience {
     }
 
     public WorkExperience() {
-        this._id = ObjectId.get();
+        this._id = ObjectId.get().toString();
     }
 
-    public WorkExperience(ObjectId _id, String employer, String jobTitle, CustomDate startDate, CustomDate endDate) {
+    public WorkExperience(String _id, String employer, String jobTitle, CustomDate startDate, CustomDate endDate) {
         super();
         this._id = _id;
         this.employer = employer;
@@ -34,11 +34,11 @@ public class WorkExperience {
         this.endDate = endDate;
     }
 
-    public ObjectId get_id() {
+    public String get_id() {
         return _id;
     }
 
-    public void set_id(ObjectId _id) {
+    public void set_id(String _id) {
         this._id = _id;
     }
 

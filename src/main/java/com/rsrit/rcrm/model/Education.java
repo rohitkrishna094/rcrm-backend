@@ -3,12 +3,15 @@ package com.rsrit.rcrm.model;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.rsrit.rcrm.serialization.ObjectIdSerializer;
 
 public class Education {
     @Id
-    private ObjectId _id;
+    @JsonSerialize(using = ObjectIdSerializer.class)
+    private String _id;
     private String school;
     private String degree;
     private Integer yearCompleted;
@@ -26,10 +29,10 @@ public class Education {
     }
 
     public Education() {
-        this._id = ObjectId.get();
+        this._id = ObjectId.get().toString();
     }
 
-    public Education(ObjectId _id, String school, String degree, Integer yearCompleted, String majorStudy, String minorStudy, Double gpa, String country, String state, String city) {
+    public Education(String _id, String school, String degree, Integer yearCompleted, String majorStudy, String minorStudy, Double gpa, String country, String state, String city) {
         super();
         this._id = _id;
         this.school = school;
@@ -43,11 +46,11 @@ public class Education {
         this.city = city;
     }
 
-    public ObjectId get_id() {
+    public String get_id() {
         return _id;
     }
 
-    public void set_id(ObjectId _id) {
+    public void set_id(String _id) {
         this._id = _id;
     }
 

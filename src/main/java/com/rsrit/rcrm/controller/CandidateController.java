@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,7 +96,7 @@ public class CandidateController {
 
     // Delete this document if exists for this candidate id
     @DeleteMapping("/{id}/documents/delete/{docId}")
-    public void deleteDocument(@PathVariable String id, @PathVariable ObjectId docId) {
+    public void deleteDocument(@PathVariable String id, @PathVariable String docId) {
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Candidate c = found.get();
@@ -131,7 +130,7 @@ public class CandidateController {
     // Get document details by id
     // Might have to change return type later on
     @GetMapping("{id}/documents/{docId}")
-    public String getDocument(@PathVariable String id, @PathVariable ObjectId docId) {
+    public String getDocument(@PathVariable String id, @PathVariable String docId) {
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Candidate c = found.get();
@@ -167,6 +166,7 @@ public class CandidateController {
     // Get a list of educations for this candidate with id id
     @GetMapping("/{id}/education")
     public String getEducationList(@PathVariable String id) {
+
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Candidate c = found.get();
@@ -180,7 +180,7 @@ public class CandidateController {
 
     // Update education details for this candidate
     @PostMapping("{id}/education/update/{eduId}")
-    public String updateEducation(@PathVariable String id, @RequestBody Education edu, @PathVariable ObjectId eduId) throws IllegalAccessException, InvocationTargetException {
+    public String updateEducation(@PathVariable String id, @RequestBody Education edu, @PathVariable String eduId) throws IllegalAccessException, InvocationTargetException {
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Candidate c = found.get();
@@ -193,7 +193,7 @@ public class CandidateController {
                     if (e.get_id().equals(eduId)) {
                         // this edu is the one to update
                         BeanUtilsBean notNull = new NullAwareBeanUtilsBean();
-                        ObjectId oldId = e.get_id();
+                        String oldId = e.get_id();
                         notNull.copyProperties(e, edu);
                         e.set_id(oldId);
                         break;
@@ -214,7 +214,7 @@ public class CandidateController {
 
     // Delete education for this candidate id
     @DeleteMapping("{id}/education/delete/{eduId}")
-    public void deleteEducation(@PathVariable String id, @PathVariable ObjectId eduId) {
+    public void deleteEducation(@PathVariable String id, @PathVariable String eduId) {
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Candidate c = found.get();
@@ -252,17 +252,70 @@ public class CandidateController {
     }
 
     // Get a list of work experiences for this candidate id
-    public String getWorkExpList() {
+    @GetMapping("/{id}/experience")
+    public String getWorkExpList(@PathVariable String id) {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<WorkExperience> exps = c.getWorkExperienceList();
+            if (exps == null)
+                exps = new ArrayList<>();
+            return exps.toString();
+        }
         return "";
     }
 
     // Update workExp details for this candidate id
-    public String updateWorkExp() {
+    @PostMapping("{id}/experience/update/{expId}")
+    public String updateWorkExp(@PathVariable String id, @PathVariable String expId, @RequestBody WorkExperience exp) throws IllegalAccessException, InvocationTargetException {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<WorkExperience> works = c.getWorkExperienceList();
+            if (works == null)
+                return "";
+            else {
+                for (int i = 0; i < works.size(); i++) {
+                    WorkExperience w = works.get(i);
+                    if (w.get_id().equals(expId)) {
+                        // this work exp is the one to update
+                        BeanUtilsBean notNull = new NullAwareBeanUtilsBean();
+                        String oldId = w.get_id();
+                        notNull.copyProperties(w, exp);
+                        w.set_id(oldId);
+                        break;
+                    }
+                }
+            } // end else
+            c.setWorkExperienceList(works);
+            Candidate saved = this.candidateRepository.save(c);
+            List<WorkExperience> results = saved.getWorkExperienceList();
+            for (int i = 0; i < results.size(); i++) {
+                if (results.get(i).get_id().equals(expId))
+                    return results.get(i).toString();
+            }
+        }
         return "";
     }
 
     // Delete workExp details for this candidate id
-    public void deleteWorkExp() {
-        return;
+    @DeleteMapping("{id}/experience/delete/{expId}")
+    public void deleteWorkExp(@PathVariable String id, @PathVariable String expId) {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<WorkExperience> works = c.getWorkExperienceList();
+            if (works != null) {
+                for (int i = 0; i < works.size(); i++) {
+                    WorkExperience w = works.get(i);
+                    if (w.get_id().equals(expId)) {
+                        works.remove(i);
+                        break;
+                    }
+                } // end for
+                c.setWorkExperienceList(works);
+                this.candidateRepository.save(c);
+            }
+        }
     }
 }

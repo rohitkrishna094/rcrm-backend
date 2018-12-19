@@ -5,13 +5,16 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.rsrit.rcrm.serialization.ObjectIdSerializer;
 
 @Document(collection = "candidates")
 public class Candidate {
 
     @Id
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private String id;
     private String firstName;
     private String lastName;
