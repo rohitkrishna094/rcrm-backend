@@ -125,4 +125,22 @@ public class CandidateController {
         return "";
     }
 
+    // Get document details by id
+    // Might have to change return type later on
+    @GetMapping("{id}/documents/{docId}")
+    public String getDocument(@PathVariable String id, @PathVariable ObjectId docId) {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<Document> docs = c.getDocuments();
+            if (docs == null)
+                return null;
+            for (int i = 0; i < docs.size(); i++) {
+                if (docs.get(i).get_id().equals(docId))
+                    return docs.get(i).toString();
+            }
+        }
+        return "not found"; // handle exceptions etc
+    }
+
 }
