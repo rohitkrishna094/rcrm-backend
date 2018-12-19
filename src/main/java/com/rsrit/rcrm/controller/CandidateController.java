@@ -104,6 +104,7 @@ public class CandidateController {
             for (int i = 0; i < docs.size(); i++) {
                 if (docs.get(i).get_id().equals(docId)) {
                     docs.remove(i);
+                    break;
                 }
             }
             c.setDocuments(docs);
@@ -211,4 +212,25 @@ public class CandidateController {
         return "";
     }
 
+    // Delete education for this candidate
+    @DeleteMapping("{id}/education/delete/{eduId}")
+    public void deleteEducation(@PathVariable String id, @PathVariable ObjectId eduId) {
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<Education> edus = c.getEducations();
+            if (edus != null) {
+                for (int i = 0; i < edus.size(); i++) {
+                    Education e = edus.get(i);
+                    if (e.get_id().equals(eduId)) {
+                        edus.remove(i);
+                        break;
+                    }
+                } // end for
+                c.setEducations(edus);
+                this.candidateRepository.save(c);
+            }
+        }
+
+    }
 }
