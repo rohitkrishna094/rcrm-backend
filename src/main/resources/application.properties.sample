@@ -3,3 +3,6 @@
 #spring.data.mongodb.port=27017
 spring.data.mongodb.uri=mongodb://localhost:27017/rcrm
 #spring.data.mongodb.uri=mongodb://admin:password#123@ds059135.mlab.com:59135/rcrm
+
+aws.access.key=<type access key here>
+aws.secret.key=<type secret key here>
