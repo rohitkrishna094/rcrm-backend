@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.bson.BsonBinarySubType;
-import org.bson.types.Binary;
+import org.apache.tika.mime.MimeTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,11 +24,15 @@ import com.rsrit.rcrm.model.Document;
 import com.rsrit.rcrm.model.Education;
 import com.rsrit.rcrm.model.WorkExperience;
 import com.rsrit.rcrm.repository.CandidateRepository;
+import com.rsrit.rcrm.service.FileStorageService;
 import com.rsrit.rcrm.util.NullAwareBeanUtilsBean;
 
 @RestController
 @RequestMapping("/candidate")
 public class CandidateController {
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Autowired
     private CandidateRepository candidateRepository;
@@ -75,13 +78,17 @@ public class CandidateController {
     /*-------------------------------Document endpoints for candidate-------------------------------*/
     // Create this document for this candidate with id "id"
     @PostMapping("/{id}/documents/save")
-    public String documentCreate(@RequestParam("file") MultipartFile multipart, @PathVariable String id) throws IOException {
+    public String documentCreate(@RequestParam("file") MultipartFile multipart, @PathVariable String id) throws IOException, MimeTypeException {
+        String fileExtension = FileStorageService.getFileExtensionFromMimeType(multipart.getContentType());
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Document d = new Document();
-            d.setTitle(id + "_document");
-            d.setType("resume");
-            d.setFileAttachment(new Binary(BsonBinarySubType.BINARY, multipart.getBytes()));
+            String fileName = id + "_doc_" + d.get_id();
+            d.setTitle(fileName);
+            d.setType(fileExtension);
+            String url = fileStorageService.saveToAws(multipart, fileName);
+            d.setUrl(url);
+            d.setTitle(fileName);
             Candidate c = found.get();
             List<Document> docs = c.getDocuments();
             if (docs == null)
@@ -103,10 +110,13 @@ public class CandidateController {
             List<Document> docs = c.getDocuments();
             for (int i = 0; i < docs.size(); i++) {
                 if (docs.get(i).get_id().equals(docId)) {
+                    fileStorageService.deleteFromAws(docs.get(i).getUrl());
                     docs.remove(i);
                     break;
+
                 }
             }
+            System.out.println(docs);
             c.setDocuments(docs);
             this.candidateRepository.save(c);
         }

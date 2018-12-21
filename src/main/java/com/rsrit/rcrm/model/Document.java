@@ -1,6 +1,5 @@
 package com.rsrit.rcrm.model;
 
-import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
@@ -13,19 +12,19 @@ public class Document {
     private String _id;
     private String title;
     private String type;
-    private Binary fileAttachment;
+    private String url;
     private String comments;
 
     public Document() {
         this._id = ObjectId.get().toString();
     }
 
-    public Document(String _id, String title, String type, Binary fileAttachment, String comments) {
+    public Document(String _id, String title, String type, String url, String comments) {
         super();
         this._id = _id;
         this.title = title;
         this.type = type;
-        this.fileAttachment = fileAttachment;
+        this.url = url;
         this.comments = comments;
     }
 
@@ -59,12 +58,12 @@ public class Document {
         this.type = type;
     }
 
-    public Binary getFileAttachment() {
-        return fileAttachment;
+    public String getUrl() {
+        return url;
     }
 
-    public void setFileAttachment(Binary fileAttachment) {
-        this.fileAttachment = fileAttachment;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getComments() {
