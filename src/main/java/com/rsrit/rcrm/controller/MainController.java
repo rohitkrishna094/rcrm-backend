@@ -44,6 +44,18 @@ public class MainController {
             s3client.putObject(bucketName, fileNameInAws, new File(path));
         else if (method.equals("delete"))
             s3client.deleteObject(bucketName, fileNameInAws);
+        else if (method.equals("deleteAll")) {
+            ObjectListing objectListing = s3client.listObjects(bucketName);
+            List<String> results = new ArrayList<>();
+            for (S3ObjectSummary os : objectListing.getObjectSummaries()) {
+                // results.add(os);
+                String url = s3client.getUrl(bucketName, os.getKey()).toExternalForm();
+
+                results.add(url);
+                s3client.deleteObject(bucketName, os.getKey());
+            }
+        }
+
         // return results
         ObjectListing objectListing = s3client.listObjects(bucketName);
         List<String> results = new ArrayList<>();
