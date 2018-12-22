@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.tika.mime.MimeTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.rsrit.rcrm.model.Candidate;
 import com.rsrit.rcrm.model.Document;
@@ -42,6 +44,7 @@ public class CandidateController {
     public String create(@RequestBody Candidate c) {
         Candidate saved = this.candidateRepository.save(c);
         return saved.toString();
+        // TODO : Add exception handling -> unique constraint on username or something so we return an error saying candidate with name username already exists or something
     }
 
     // Read
@@ -64,7 +67,8 @@ public class CandidateController {
             }
             this.candidateRepository.save(found.get());
         }
-        return "";
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "candidate not found");
+        // return "";
     }
 
     // Delete
@@ -126,7 +130,6 @@ public class CandidateController {
     // Delete all docs for this candidate
     @DeleteMapping("/{id}/documents/")
     public void deleteAllDocuments(@PathVariable String id) {
-        System.out.println("hello");
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Candidate c = found.get();
