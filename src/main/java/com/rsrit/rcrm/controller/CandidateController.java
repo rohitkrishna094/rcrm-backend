@@ -102,23 +102,43 @@ public class CandidateController {
     }
 
     // Delete this document if exists for this candidate id
-    @DeleteMapping("/{id}/documents/delete/{docId}")
+    @DeleteMapping("/{id}/documents/{docId}")
     public void deleteDocument(@PathVariable String id, @PathVariable String docId) {
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Candidate c = found.get();
             List<Document> docs = c.getDocuments();
-            for (int i = 0; i < docs.size(); i++) {
-                if (docs.get(i).get_id().equals(docId)) {
-                    fileStorageService.deleteFromAws(docs.get(i).getUrl());
-                    docs.remove(i);
-                    break;
+            if (docs != null) {
+                for (int i = 0; i < docs.size(); i++) {
+                    if (docs.get(i).get_id().equals(docId)) {
+                        fileStorageService.deleteFromAws(docs.get(i).getUrl());
+                        docs.remove(i);
+                        break;
 
+                    }
                 }
+                c.setDocuments(docs);
+                this.candidateRepository.save(c);
             }
-            System.out.println(docs);
-            c.setDocuments(docs);
-            this.candidateRepository.save(c);
+        }
+    }
+
+    // Delete all docs for this candidate
+    @DeleteMapping("/{id}/documents/")
+    public void deleteAllDocuments(@PathVariable String id) {
+        System.out.println("hello");
+        Optional<Candidate> found = this.candidateRepository.findById(id);
+        if (found.isPresent()) {
+            Candidate c = found.get();
+            List<Document> docs = c.getDocuments();
+            if (docs != null) {
+                for (int i = 0; i < docs.size(); i++) {
+                    fileStorageService.deleteFromAws(docs.get(i).getUrl());
+                }
+                docs = null;
+                c.setDocuments(docs);
+                this.candidateRepository.save(c);
+            }
         }
     }
 
