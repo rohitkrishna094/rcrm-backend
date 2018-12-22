@@ -3,7 +3,6 @@ package com.rsrit.rcrm.service;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import javax.annotation.PostConstruct;
 
@@ -75,11 +74,7 @@ public class FileStorageService {
             while (objIter.hasNext()) {
                 String key = objIter.next().getKey();
                 if (key.equals(uri.getKey()))
-                    try {
-                        s3Client.deleteObject(bucketName, key);
-                    } catch (NoSuchElementException e) {
-                        System.out.println("element " + key + " not found");
-                    }
+                    s3Client.deleteObject(bucketName, key);
             }
 
             // If the bucket contains many objects, the listObjects() call

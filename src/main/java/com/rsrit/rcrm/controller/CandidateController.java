@@ -62,12 +62,12 @@ public class CandidateController {
             try {
                 notNull.copyProperties(found.get(), c);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RCRM-Error: Error while initializing model class from input");
             }
             this.candidateRepository.save(found.get());
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "candidate not found");
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "RCRM-Error: Requested candidate not found");
         // return "";
     }
 
@@ -82,15 +82,28 @@ public class CandidateController {
     /*-------------------------------Document endpoints for candidate-------------------------------*/
     // Create this document for this candidate with id "id"
     @PostMapping("/{id}/documents/save")
-    public String documentCreate(@RequestParam("file") MultipartFile multipart, @PathVariable String id) throws IOException, MimeTypeException {
-        String fileExtension = FileStorageService.getFileExtensionFromMimeType(multipart.getContentType());
+    public String documentCreate(@RequestParam("file") MultipartFile multipart, @PathVariable String id) {
+        String fileExtension;
+        try {
+            fileExtension = FileStorageService.getFileExtensionFromMimeType(multipart.getContentType());
+        } catch (MimeTypeException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "RCRM-Error: Input Mime Type not recognized. Please give a proper valid file extension.");
+        }
+
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Document d = new Document();
             String fileName = id + "_doc_" + d.get_id();
             d.setTitle(fileName);
             d.setType(fileExtension);
-            String url = fileStorageService.saveToAws(multipart, fileName);
+            String url = "";
+            try {
+                url = fileStorageService.saveToAws(multipart, fileName);
+            } catch (MimeTypeException | IOException e) {
+                e.printStackTrace();
+                throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "RCRM-Error: Unable to upload the file to our server.");
+            }
             d.setUrl(url);
             d.setTitle(fileName);
             Candidate c = found.get();
@@ -102,7 +115,7 @@ public class CandidateController {
             this.candidateRepository.save(c);
             return d.toString();
         }
-        return "";
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "RCRM-Error: Requested candidate not found");
     }
 
     // Delete this document if exists for this candidate id
@@ -157,7 +170,7 @@ public class CandidateController {
                 docs = new ArrayList<>();
             return docs.toString();
         }
-        return "";
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "RCRM-Error: Requested candidate not found");
     }
 
     // Get document details by id
@@ -175,7 +188,7 @@ public class CandidateController {
                     return docs.get(i).toString();
             }
         }
-        return "not found"; // handle exceptions etc
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "RCRM-Error: Requested candidate not found");
     }
 
     /*-------------------------------Education endpoints for candidate-------------------------------*/
@@ -193,7 +206,7 @@ public class CandidateController {
             List<Education> results = this.candidateRepository.save(c).getEducations();
             return results.get(results.size() - 1).toString();
         }
-        return "";
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "RCRM-Error: Requested candidate not found");
     }
 
     // Get a list of educations for this candidate with id id
@@ -208,12 +221,12 @@ public class CandidateController {
                 edus = new ArrayList<>();
             return edus.toString();
         }
-        return "";
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "RCRM-Error: Requested candidate not found");
     }
 
     // Update education details for this candidate
     @PostMapping("{id}/education/update/{eduId}")
-    public String updateEducation(@PathVariable String id, @RequestBody Education edu, @PathVariable String eduId) throws IllegalAccessException, InvocationTargetException {
+    public String updateEducation(@PathVariable String id, @RequestBody Education edu, @PathVariable String eduId) {
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Candidate c = found.get();
@@ -227,7 +240,12 @@ public class CandidateController {
                         // this edu is the one to update
                         BeanUtilsBean notNull = new NullAwareBeanUtilsBean();
                         String oldId = e.get_id();
-                        notNull.copyProperties(e, edu);
+                        try {
+                            notNull.copyProperties(e, edu);
+                        } catch (IllegalAccessException | InvocationTargetException e1) {
+                            e1.printStackTrace();
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RCRM-Error: Error while initializing model class from input");
+                        }
                         e.set_id(oldId);
                         break;
                     }
@@ -242,7 +260,7 @@ public class CandidateController {
                 }
             }
         }
-        return "";
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "RCRM-Error: Requested candidate not found");
     }
 
     // Delete education for this candidate id
@@ -281,7 +299,7 @@ public class CandidateController {
             List<WorkExperience> results = this.candidateRepository.save(c).getWorkExperienceList();
             return results.get(results.size() - 1).toString();
         }
-        return "";
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "RCRM-Error: Requested candidate not found");
     }
 
     // Get a list of work experiences for this candidate id
@@ -295,12 +313,12 @@ public class CandidateController {
                 exps = new ArrayList<>();
             return exps.toString();
         }
-        return "";
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "RCRM-Error: Requested candidate not found");
     }
 
     // Update workExp details for this candidate id
     @PostMapping("{id}/experience/update/{expId}")
-    public String updateWorkExp(@PathVariable String id, @PathVariable String expId, @RequestBody WorkExperience exp) throws IllegalAccessException, InvocationTargetException {
+    public String updateWorkExp(@PathVariable String id, @PathVariable String expId, @RequestBody WorkExperience exp) {
         Optional<Candidate> found = this.candidateRepository.findById(id);
         if (found.isPresent()) {
             Candidate c = found.get();
@@ -314,7 +332,12 @@ public class CandidateController {
                         // this work exp is the one to update
                         BeanUtilsBean notNull = new NullAwareBeanUtilsBean();
                         String oldId = w.get_id();
-                        notNull.copyProperties(w, exp);
+                        try {
+                            notNull.copyProperties(w, exp);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            e.printStackTrace();
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RCRM-Error: Error while initializing model class from input");
+                        }
                         w.set_id(oldId);
                         break;
                     }
@@ -328,7 +351,7 @@ public class CandidateController {
                     return results.get(i).toString();
             }
         }
-        return "";
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "RCRM-Error: Requested candidate not found");
     }
 
     // Delete workExp details for this candidate id
