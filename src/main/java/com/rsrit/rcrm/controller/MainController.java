@@ -20,6 +20,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @RestController
 @RequestMapping("/test")
@@ -66,6 +68,51 @@ public class MainController {
         }
 
         return results;
+    }
+
+    @GetMapping("/test")
+    public List<Payload> test() {
+        List<Payload> p = new ArrayList<>();
+
+        p.add(new Payload("java", "j"));
+        p.add(new Payload("java", "j"));
+        p.add(new Payload("java", "j"));
+        p.add(new Payload("java", "j"));
+        return p;
+    }
+
+    class Payload {
+        private String url;
+        private String imageUrl;
+
+        @Override
+        public String toString() {
+            Gson gson = new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd").create();
+            return gson.toJson(this);
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
+
+        public Payload(String url, String imageUrl) {
+            super();
+            this.url = url;
+            this.imageUrl = imageUrl;
+        }
+
     }
 
 }
