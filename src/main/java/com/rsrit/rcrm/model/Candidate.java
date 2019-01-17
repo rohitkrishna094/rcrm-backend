@@ -55,7 +55,7 @@ public class Candidate {
     private Boolean relocation;
     private List<String> skills;
     private List<String> primarySkills;
-    private String technology;
+    private String technology; // change to list of strings
     private String taxTerms;
 
     // enums?
