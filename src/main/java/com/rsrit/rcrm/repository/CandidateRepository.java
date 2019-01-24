@@ -18,7 +18,7 @@ public interface CandidateRepository extends MongoRepository<Candidate, String> 
     public Optional<Candidate> findById(ObjectId id);
 
     // @Query("{$text: {$search: ?0}}")
-    @Query("{$where: \"JSON.stringify(this).indexOf('gmail')!=-1\"}")
-    // @Query("?0")
+    // @Query("{$where: \"JSON.stringify(this).indexOf('gmail')!=-1\"}")
+    @Query("{$where: ?0}")
     public List<Candidate> findBySearch(String query);
 }
