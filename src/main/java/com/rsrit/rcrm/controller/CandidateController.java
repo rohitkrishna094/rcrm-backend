@@ -9,6 +9,9 @@ import java.util.Optional;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.tika.mime.MimeTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicQuery;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +41,33 @@ public class CandidateController {
 
     @Autowired
     private CandidateRepository candidateRepository;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    // @GetMapping("/search")
+    // public String search(@RequestParam(name = "query", defaultValue = "") String query, @RequestParam(value = "page", defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int
+    // size) {
+    // // String newQueryString = "\"{$where: \"JSON.stringify(this).indexOf(?)!=-1\"}\"";
+    // // newQueryString = newQueryString.replace("?", query);
+    // // System.out.println(newQueryString);
+    // // Page<Candidate> pages = candidateRepository.findBySearch(newQueryString, PageRequest.of(pageNumber, size));
+    // List<Candidate> pages = candidateRepository.findBySearch(query);
+    // return pages.toString();
+    // // return "";
+    // }
+
+    @GetMapping("/search")
+    public String search(@RequestParam(name = "query", defaultValue = "") String searchString, @RequestParam(value = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "10") int size) {
+        String s = "{$where:\"JSON.stringify(this).indexOf('?')!=-1\"}";
+        s = s.replace("?", searchString);
+        Query q = new BasicQuery(s);
+
+        List<Candidate> candidates = mongoTemplate.find(q, Candidate.class);
+        return String.valueOf(candidates.size());
+        // return candidates.toString();
+    }
 
     // Create
     @PostMapping("/save")

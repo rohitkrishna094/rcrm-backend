@@ -47,7 +47,6 @@ public class FileStorageService {
 
     // Save this document as fileName in defaultBucket
     public String saveToAws(MultipartFile multiPart, String fileName) throws IOException, MimeTypeException {
-        // TODO Auto-generated method stub
         String awsFileName = path + fileName + getFileExtensionFromMimeType(multiPart.getContentType());
 
         ObjectMetadata meta = new ObjectMetadata();
