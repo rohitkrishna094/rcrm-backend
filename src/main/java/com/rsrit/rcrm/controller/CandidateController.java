@@ -47,9 +47,9 @@ public class CandidateController {
     public String search(@RequestParam(name = "query", defaultValue = "") String query, @RequestParam(value = "page", defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int size) {
         String s = "JSON.stringify(this).indexOf('?')!=-1";
         s = s.replace("?", query);
-        List<Candidate> pages = candidateRepository.findBySearch(s);
-        return String.valueOf(pages.size());
-        // return "";
+        List<Candidate> candidates = candidateRepository.findBySearch(s);
+        // return String.valueOf(candidates.size());
+        return candidates.toString();
     }
 
     // @GetMapping("/search")
