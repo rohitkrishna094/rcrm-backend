@@ -2,20 +2,13 @@ package com.rsrit.rcrm.model;
 
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.elasticsearch.annotations.Document;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.rsrit.rcrm.serialization.ObjectIdSerializer;
 
-@Document(collection = "candidates")
-// @org.springframework.data.elasticsearch.annotations.Document(indexName = "rcrm", type = "candidates")
-public class Candidate {
-
-    @Id
-    @JsonSerialize(using = ObjectIdSerializer.class)
+@Document(indexName = "rcrm", type = "candidates")
+public class ElasticCandidate {
     private String id;
     private String firstName;
     private String lastName;
@@ -74,38 +67,8 @@ public class Candidate {
         return gson.toJson(this);
     }
 
-    public Candidate(String firstName, String lastName, String emailAddress) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.emailAddress = emailAddress;
-    }
+    public ElasticCandidate() {
 
-    public Candidate() {
-
-    }
-
-    public List<WorkExperience> getWorkExperienceList() {
-        return workExperienceList;
-    }
-
-    public void setWorkExperienceList(List<WorkExperience> workExperienceList) {
-        this.workExperienceList = workExperienceList;
-    }
-
-    public List<Education> getEducations() {
-        return educations;
-    }
-
-    public void setEducations(List<Education> educations) {
-        this.educations = educations;
-    }
-
-    public List<com.rsrit.rcrm.model.Document> getDocuments() {
-        return documents;
-    }
-
-    public void setDocuments(List<com.rsrit.rcrm.model.Document> documents) {
-        this.documents = documents;
     }
 
     public String getId() {
@@ -434,6 +397,30 @@ public class Candidate {
 
     public void setDisability(String disability) {
         this.disability = disability;
+    }
+
+    public List<com.rsrit.rcrm.model.Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<com.rsrit.rcrm.model.Document> documents) {
+        this.documents = documents;
+    }
+
+    public List<Education> getEducations() {
+        return educations;
+    }
+
+    public void setEducations(List<Education> educations) {
+        this.educations = educations;
+    }
+
+    public List<WorkExperience> getWorkExperienceList() {
+        return workExperienceList;
+    }
+
+    public void setWorkExperienceList(List<WorkExperience> workExperienceList) {
+        this.workExperienceList = workExperienceList;
     }
 
 }

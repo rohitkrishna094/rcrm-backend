@@ -20,6 +20,13 @@
 	</properties>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-elasticsearch -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-elasticsearch</artifactId>
+			<version>3.1.4.RELEASE</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-core</artifactId>
@@ -30,13 +37,11 @@
 			<artifactId>aws-java-sdk</artifactId>
 			<version>1.11.327</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.9.3</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>

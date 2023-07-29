@@ -9,6 +9,8 @@ import java.util.Optional;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.tika.mime.MimeTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,8 +27,10 @@ import org.springframework.web.server.ResponseStatusException;
 import com.rsrit.rcrm.model.Candidate;
 import com.rsrit.rcrm.model.Document;
 import com.rsrit.rcrm.model.Education;
+import com.rsrit.rcrm.model.ElasticCandidate;
 import com.rsrit.rcrm.model.WorkExperience;
 import com.rsrit.rcrm.repository.CandidateRepository;
+import com.rsrit.rcrm.repository.SearchRepository;
 import com.rsrit.rcrm.service.FileStorageService;
 import com.rsrit.rcrm.util.NullAwareBeanUtilsBean;
 
@@ -41,16 +45,27 @@ public class CandidateController {
     private CandidateRepository candidateRepository;
 
     @Autowired
+    private SearchRepository searchRepository;
+
+    @Autowired
     private MongoTemplate mongoTemplate;
 
     @GetMapping("/search")
-    public String search(@RequestParam(name = "query", defaultValue = "") String query, @RequestParam(value = "page", defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int size) {
-        String s = "JSON.stringify(this).indexOf('?')!=-1";
-        s = s.replace("?", query);
-        List<Candidate> candidates = candidateRepository.findBySearch(s);
-        // return String.valueOf(candidates.size());
-        return candidates.toString();
+    public List<ElasticCandidate> searchElastic(@RequestParam(name = "query", defaultValue = "") String query, @RequestParam(value = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ElasticCandidate> findAll = searchRepository.findAll(PageRequest.of(0, 100000));
+        return findAll.getContent();
     }
+
+    // @GetMapping("/search")
+    // public String searchNormal(@RequestParam(name = "query", defaultValue = "") String query, @RequestParam(value = "page", defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10")
+    // int size) {
+    // String s = "JSON.stringify(this).indexOf('?')!=-1";
+    // s = s.replace("?", query);
+    // List<Candidate> candidates = candidateRepository.findBySearch(s);
+    // // return String.valueOf(candidates.size());
+    // return candidates.toString();
+    // }
 
     // @GetMapping("/search")
     // public String search(@RequestParam(name = "query", defaultValue = "") String searchString, @RequestParam(value = "page", defaultValue = "0") int pageNumber,

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.github.javafaker.Faker;
@@ -14,6 +15,7 @@ import com.rsrit.rcrm.repository.CandidateRepository;
 
 @SpringBootApplication
 @EnableMongoRepositories
+@EnableElasticsearchRepositories
 public class RcrmApplication implements CommandLineRunner {
 
     @Autowired
